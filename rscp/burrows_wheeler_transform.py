@@ -4,15 +4,15 @@ def _rotate(s):
 
 def _construct_lookup(s):
     """
-    Constructs a lookup table t from a sorted string s,
-    s.t. t[x] == s.index(x), but in linear time.
+    Constructs a lookup table t from a sorted string s
+    in linear time s.t. t[x] == s.index(x).
     """
     n = len(s)
     t = {}
-    for i, ch in enumerate(s):
-        if i > 0 and s[i-1] == ch:
+    for i, char in enumerate(s):
+        if i > 0 and s[i-1] == char:
             continue
-        t[ch] = i
+        t[char] = i
     return t
 
 
@@ -28,21 +28,23 @@ def transform(s):
     return l, i
 
 
-def untransform(l, i):
+def reverse(l, i):
+    # f = first column of matrix M from transform(s)
+    # construct T s.t. f[T[i]] = l[i]
     f = "".join(sorted(l))
     T = []
     last = _construct_lookup(f)
-    for ch in l:
-        T.append(last[ch])
-        # upon seeing ch again, we can look at previous index and
+    for char in l:
+        T.append(last[char])
+        # upon seeing char again, we can look at previous index and
         # increment by 1 because f is sorted.
-        last[ch] += 1
+        last[char] += 1
 
     r = []
     j = i
     for _ in range(len(l)):
         r.append(l[j])
-        j = T[j]  # iterative T^{n+1}[x] = T[T^n[x]], avoid O(n^2) lookups.
+        j = T[j]  # iterative T^{n+1}[x] = T[T^n[x]]
 
     r.reverse()
     return "".join(r)
